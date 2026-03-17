@@ -168,7 +168,7 @@ export default function ImpactStats() {
     <section
       ref={sectionRef}
       id="impact"
-      className="relative w-full py-24 md:py-32 bg-white overflow-hidden"
+      className="relative w-full py-24 md:py-32 bg-transparent overflow-hidden"
     >
       {/* Floating Particles Background */}
       <div ref={particlesRef} className="absolute inset-0 pointer-events-none overflow-hidden">

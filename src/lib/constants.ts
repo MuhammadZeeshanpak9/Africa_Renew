@@ -58,11 +58,11 @@ export const SECTIONS = {
 
 // Navigation Links
 export const NAV_LINKS = [
-  { label: 'Mission', href: `#${SECTIONS.mission}` },
-  { label: 'Leadership', href: `#${SECTIONS.leadership}` },
-  { label: 'Architecture', href: `#${SECTIONS.architecture}` },
-  { label: 'Impact', href: `#${SECTIONS.impact}` },
-  { label: 'Join', href: `#${SECTIONS.cta}` },
+  { label: 'Mission', href: `#${SECTIONS.mission}`, icon: 'Target' },
+  { label: 'Leadership', href: `#${SECTIONS.leadership}`, icon: 'Users' },
+  { label: 'Architecture', href: `#${SECTIONS.architecture}`, icon: 'Layout' },
+  { label: 'Impact', href: `#${SECTIONS.impact}`, icon: 'BarChart' },
+  { label: 'Join', href: `#${SECTIONS.cta}`, icon: 'Rocket' },
 ];
 
 // Mission Cards Data

@@ -74,7 +74,7 @@ export default function MissionVision() {
     <section
       ref={sectionRef}
       id="mission"
-      className="relative w-full py-24 md:py-32 bg-white overflow-hidden"
+      className="relative w-full py-24 md:py-32 bg-transparent overflow-hidden"
     >
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-30 pointer-events-none">

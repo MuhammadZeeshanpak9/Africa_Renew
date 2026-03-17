@@ -6,8 +6,6 @@ import type { Variants } from 'framer-motion';
 import { ArrowRight, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-import CityTransition2D from '@/components/backgrounds/CityTransition2D';
-
 gsap.registerPlugin(ScrollTrigger);
 
 export default function HeroSection() {
@@ -66,12 +64,9 @@ export default function HeroSection() {
     <section
       ref={sectionRef}
       id="hero"
-      className="relative w-full h-screen overflow-hidden bg-background"
+      className="relative w-full h-screen overflow-hidden bg-transparent"
     >
-      {/* 2D Background Animation Container */}
-      <div className="absolute inset-0 z-0 select-none">
-        <CityTransition2D scrollContainer={sectionRef}  />
-      </div>
+      {/* 2D Background removed - now global */}
 
       {/* Atmospheric Overlays */}
       <div className="absolute inset-0 z-[1] bg-gradient-to-t from-background via-background/20 to-transparent pointer-events-none" />
@@ -80,11 +75,11 @@ export default function HeroSection() {
       {/* Main Content Layout */}
       <div
         ref={containerRef}
-        className="relative z-10 w-full h-full px-6 sm:px-10 lg:px-20 pt-32 pb-16 flex flex-col justify-between pointer-events-none"
+        className="relative z-10 w-full h-full px-6 sm:px-10 lg:px-20 pt-32 pb-16 flex flex-col justify-between"
       >
         <div className="flex-1 flex flex-col justify-start max-w-7xl mx-auto w-full">
           
-          <div className="w-full relative hero-overlay-content pt-10 md:pt-20 pointer-events-auto">
+          <div className="w-full relative hero-overlay-content pt-10 md:pt-20">
             {/* Dynamic Intro Badge */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}

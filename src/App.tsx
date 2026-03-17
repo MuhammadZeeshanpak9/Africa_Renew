@@ -16,6 +16,9 @@ import Gallery from './sections/Gallery';
 import CTASection from './sections/CTASection';
 import Footer from './sections/Footer';
 
+// Backgrounds
+import CityTransition2D from './components/backgrounds/CityTransition2D';
+
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
@@ -112,12 +115,17 @@ function App() {
   */
 
   return (
-    <div className="relative min-h-screen bg-white overflow-x-hidden">
+    <div className="relative min-h-screen bg-transparent overflow-x-hidden">
+      {/* Global Animated Background */}
+      <div className="fixed inset-0 z-0">
+        <CityTransition2D />
+      </div>
+
       {/* Navigation */}
       <Navbar />
 
       {/* Main Content */}
-      <main className="relative">
+      <main className="relative z-10 lg:pl-64">
         {/* Hero Section - Pinned */}
         <HeroSection />
 

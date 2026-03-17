@@ -64,7 +64,7 @@ export default function CTASection() {
     <section
       ref={sectionRef}
       id="cta"
-      className="relative w-full py-24 md:py-32 bg-white overflow-hidden"
+      className="relative w-full py-24 md:py-32 bg-transparent overflow-hidden"
     >
       {/* Animated Background */}
       <div className="absolute inset-0 pointer-events-none">

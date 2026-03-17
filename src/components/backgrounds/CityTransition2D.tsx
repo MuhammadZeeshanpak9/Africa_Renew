@@ -1,20 +1,11 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
-interface CityTransitionProps {
-  scrollContainer?: React.RefObject<HTMLElement | null>;
-}
-
-export default function CityTransition2D({ scrollContainer }: CityTransitionProps) {
+export default function CityTransition2D() {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Setup Framer Motion scroll tracking
-  // We use useScroll linked to the target section or window
-  const targetObj = scrollContainer || containerRef;
-  const { scrollYProgress } = useScroll({
-    target: targetObj,
-    offset: ["start start", "end end"]
-  });
+  // Setup Framer Motion scroll tracking for the whole page
+  const { scrollYProgress } = useScroll();
 
   // Smooth the scroll progress so animations feel less rigid
   const smoothProgress = useSpring(scrollYProgress, {
@@ -24,21 +15,21 @@ export default function CityTransition2D({ scrollContainer }: CityTransitionProp
   });
 
   // Layer 1: Old City (Dilapidated, basic blocks)
-  // Fades out slightly and moves down on scroll
-  const oldCityOpacity = useTransform(smoothProgress, [0, 0.4, 0.8], [1, 0.8, 0.2]);
-  const oldCityY = useTransform(smoothProgress, [0, 1], ["0%", "20%"]);
-  const oldCityScale = useTransform(smoothProgress, [0, 1], [1, 0.95]);
+  // Visible at start, fades out specifically between 10% and 50% scroll
+  const oldCityOpacity = useTransform(smoothProgress, [0, 0.2, 0.5], [1, 1, 0]);
+  const oldCityY = useTransform(smoothProgress, [0, 0.5], ["0%", "10%"]);
+  const oldCityScale = useTransform(smoothProgress, [0, 0.5], [1, 0.95]);
 
   // Layer 2: New City (Glowing, modern skyscrapers)
-  // Fades in, scales up, and moves up
-  const newCityOpacity = useTransform(smoothProgress, [0.2, 0.7, 1], [0, 0.8, 1]);
-  const newCityY = useTransform(smoothProgress, [0, 1], ["10%", "0%"]);
+  // Starts appearing around 20% scroll, fully realized by 80%
+  const newCityOpacity = useTransform(smoothProgress, [0.2, 0.6, 1], [0, 1, 1]);
+  const newCityY = useTransform(smoothProgress, [0, 0.5, 1], ["10%", "5%", "0%"]);
   const newCityScale = useTransform(smoothProgress, [0, 1], [0.95, 1.05]);
 
-  // Clip Path wipe effect for the new city
+  // Clip Path wipe effect for the new city - matches the transformation start
   const newCityClip = useTransform(
     smoothProgress, 
-    [0.1, 0.9], 
+    [0.2, 0.7], 
     ["inset(100% 0 0 0)", "inset(0% 0 0 0)"]
   );
 
@@ -47,7 +38,7 @@ export default function CityTransition2D({ scrollContainer }: CityTransitionProp
   const scaffoldY = useTransform(smoothProgress, [0, 1], ["5%", "-5%"]);
 
   return (
-    <div ref={containerRef} className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none bg-background">
+    <div ref={containerRef} className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none bg-white">
       
       {/* Background Ambient Glow */}
       <motion.div 
@@ -60,22 +51,22 @@ export default function CityTransition2D({ scrollContainer }: CityTransitionProp
         className="absolute bottom-0 w-full h-[60vh] z-10 flex items-end justify-center"
         style={{ opacity: oldCityOpacity, y: oldCityY, scale: oldCityScale }}
       >
-        <svg viewBox="0 0 1440 400" className="w-full h-full object-cover origin-bottom opacity-40 grayscale sepia-[0.3]">
+        <svg viewBox="0 0 1440 400" className="w-full h-full object-cover origin-bottom opacity-20 grayscale brightness-50">
           {/* Base ground layer */}
           <rect x="0" y="380" width="1440" height="20" fill="currentColor" />
           
           {/* Old Buildings - Blocky, simple, damaged */}
-          <path d="M50 380 V250 H120 V380 Z" fill="currentColor" opacity="0.8" />
-          <path d="M150 380 V180 H250 V380 Z" fill="currentColor" opacity="0.7" />
-          <path d="M280 380 V120 H380 V150 H420 V380 Z" fill="currentColor" opacity="0.6" />
-          <path d="M480 380 V200 L520 180 V380 Z" fill="currentColor" opacity="0.8" />
-          <path d="M560 380 V100 H700 V120 H740 V380 Z" fill="currentColor" opacity="0.9" />
+          <path d="M50 380 V250 H120 V380 Z" fill="#1A1A1A" opacity="0.8" />
+          <path d="M150 380 V180 H250 V380 Z" fill="#2A2A2A" opacity="0.7" />
+          <path d="M280 380 V120 H380 V150 H420 V380 Z" fill="#1F1F1F" opacity="0.6" />
+          <path d="M480 380 V200 L520 180 V380 Z" fill="#262626" opacity="0.8" />
+          <path d="M560 380 V100 H700 V120 H740 V380 Z" fill="#151515" opacity="0.9" />
           
-          <path d="M780 380 V160 H850 V380 Z" fill="currentColor" opacity="0.5" />
-          <path d="M880 380 V220 H980 V380 Z" fill="currentColor" opacity="0.7" />
-          <path d="M1020 380 V90 H1120 V140 H1160 V380 Z" fill="currentColor" opacity="0.8" />
-          <path d="M1200 380 V240 H1300 V380 Z" fill="currentColor" opacity="0.6" />
-          <path d="M1350 380 V170 H1420 V380 Z" fill="currentColor" opacity="0.7" />
+          <path d="M780 380 V160 H850 V380 Z" fill="#1A1A1A" opacity="0.5" />
+          <path d="M880 380 V220 H980 V380 Z" fill="#222222" opacity="0.7" />
+          <path d="M1020 380 V90 H1120 V140 H1160 V380 Z" fill="#1F1F1F" opacity="0.8" />
+          <path d="M1200 380 V240 H1300 V380 Z" fill="#2A2A2A" opacity="0.6" />
+          <path d="M1350 380 V170 H1420 V380 Z" fill="#1A1A1A" opacity="0.7" />
 
           {/* Random old windows (dark) */}
           {[...Array(30)].map((_, i) => (
@@ -149,12 +140,12 @@ export default function CityTransition2D({ scrollContainer }: CityTransitionProp
           <path d="M1100 500 L1150 180 H1250 L1300 500 Z" fill="url(#newCityGrad2)" opacity="0.3" />
 
           {/* Front layer hero new buildings */}
-          <path d="M200 500 V150 L250 100 L300 150 V500 Z" fill="currentColor" />
-          <path d="M350 500 V220 L400 180 V500 Z" fill="currentColor" />
-          <path d="M500 500 V80 L580 40 H680 V500 Z" fill="currentColor" />
-          <path d="M720 500 V180 L760 140 H840 L880 180 V500 Z" fill="currentColor" />
-          <path d="M920 500 V120 L960 80 H1020 V500 Z" fill="currentColor" />
-          <path d="M1060 500 V250 H1180 V500 Z" fill="currentColor" />
+          <path d="M200 500 V150 L250 100 L300 150 V500 Z" fill="#0F172A" />
+          <path d="M350 500 V220 L400 180 V500 Z" fill="#1E293B" />
+          <path d="M500 500 V80 L580 40 H680 V500 Z" fill="#020617" />
+          <path d="M720 500 V180 L760 140 H840 L880 180 V500 Z" fill="#1E293B" />
+          <path d="M920 500 V120 L960 80 H1020 V500 Z" fill="#0F172A" />
+          <path d="M1060 500 V250 H1180 V500 Z" fill="#1E293B" />
           
           {/* Glowing Windows Patterns */}
           <g opacity="0.8">

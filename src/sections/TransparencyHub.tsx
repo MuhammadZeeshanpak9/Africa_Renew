@@ -257,7 +257,7 @@ export default function TransparencyHub() {
     <section
       ref={sectionRef}
       id="transparency"
-      className="relative w-full py-24 md:py-32 bg-white overflow-hidden"
+      className="relative w-full py-24 md:py-32 bg-transparent overflow-hidden"
     >
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none" />
