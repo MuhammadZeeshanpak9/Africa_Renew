@@ -234,6 +234,47 @@ export function textReveal(
   return tl;
 }
 
+// Construction assembly animation
+export function constructionAssembly(
+  element: HTMLElement,
+  duration: number = 1.2,
+  delay: number = 0
+): gsap.core.Timeline {
+  const tl = gsap.timeline({ delay });
+  
+  // Start with a wireframe/blueprint look
+  tl.fromTo(
+    element,
+    { 
+      clipPath: 'inset(100% 0 0 0)',
+      borderColor: 'rgba(79,195,247,0.8)',
+      backgroundColor: 'transparent',
+      boxShadow: '0 0 0px rgba(79,195,247,0)',
+    },
+    { 
+      clipPath: 'inset(0% 0 0 0)',
+      borderColor: 'inherit',
+      backgroundColor: 'inherit',
+      boxShadow: '0 10px 30px -10px rgba(0,0,0,0.1)',
+      duration,
+      ease: 'power3.inOut'
+    }
+  );
+
+  // Stagger child elements upwards
+  const children = element.children;
+  if (children.length > 0) {
+    tl.fromTo(
+      children,
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: 'back.out(1.2)' },
+      '-=0.8'
+    );
+  }
+
+  return tl;
+}
+
 // SVG path draw animation
 export function drawSVGPath(
   pathElement: SVGPathElement,
@@ -327,6 +368,7 @@ export default {
   fadeInScale,
   slideIn,
   staggerChildren,
+  constructionAssembly,
   createScrollAnimation,
   createParallax,
   countUp,

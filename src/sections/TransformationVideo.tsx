@@ -112,10 +112,10 @@ export default function TransformationVideo() {
     <section
       ref={sectionRef}
       id="transformation"
-      className="relative w-full min-h-screen py-20 flex flex-col items-center justify-center bg-white overflow-hidden"
+      className="relative w-full min-h-screen py-20 flex flex-col items-center justify-center bg-transparent overflow-hidden"
     >
-      {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white via-primary/5 to-white pointer-events-none" />
+      {/* Background Gradient - subtle transparency */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none" />
 
       {/* Section Title */}
       <h2

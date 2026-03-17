@@ -66,6 +66,8 @@ export default function CTASection() {
       id="cta"
       className="relative w-full py-24 md:py-32 bg-transparent overflow-hidden"
     >
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(79,195,247,0.02)_1px,transparent_1px),linear-gradient(rgba(79,195,247,0.02)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
+
       {/* Animated Background */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Gradient Orbs */}

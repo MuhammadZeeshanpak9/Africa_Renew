@@ -87,25 +87,80 @@ export default function CityTransition2D() {
         className="absolute bottom-0 w-full h-[70vh] z-20"
         style={{ opacity: scaffoldOpacity, y: scaffoldY }}
       >
-        <div className="w-full h-full bg-[linear-gradient(90deg,rgba(79,195,247,0.1)_1px,transparent_1px),linear-gradient(rgba(79,195,247,0.1)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:linear-gradient(to_bottom,transparent,black_80%)]" />
+        {/* Blueprint Grid Background */}
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(79,195,247,0.08)_1.5px,transparent_1.5px),linear-gradient(rgba(79,195,247,0.08)_1.5px,transparent_1.5px)] bg-[size:60px_60px] md:bg-[size:100px_100px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(79,195,247,0.04)_1px,transparent_1px),linear-gradient(rgba(79,195,247,0.04)_1px,transparent_1px)] bg-[size:20px_20px] md:bg-[size:25px_25px]" />
         
+        {/* Construction Visuals - Cranes & Scaffolding */}
+        <svg viewBox="0 0 1440 600" className="absolute bottom-0 w-full h-[600px] text-primary/30">
+          <defs>
+            <pattern id="scaffoldPattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M0 0 L40 40 M40 0 L0 40 M0 20 H40 M20 0 V40" fill="none" stroke="currentColor" strokeWidth="0.5" />
+            </pattern>
+          </defs>
+
+          {/* Scaffolding Blocks */}
+          <rect x="200" y="200" width="100" height="400" fill="url(#scaffoldPattern)" />
+          <rect x="550" y="100" width="120" height="500" fill="url(#scaffoldPattern)" />
+          <rect x="950" y="150" width="80" height="450" fill="url(#scaffoldPattern)" />
+
+          {/* Construction Cranes */}
+          <g className="crane-1">
+            <motion.g
+              style={{ 
+                rotate: useTransform(smoothProgress, [0.2, 0.6], [0, -15]),
+                originX: "400px",
+                originY: "500px"
+              }}
+            >
+              <path d="M380 600 V150 H420 V600" fill="currentColor" opacity="0.4" />
+              <path d="M400 150 L600 120 V140 L400 160 Z" fill="currentColor" opacity="0.6" />
+              <path d="M400 150 L250 165 V175 L400 160 Z" fill="currentColor" opacity="0.3" />
+            </motion.g>
+          </g>
+
+          <g className="crane-2">
+            <motion.g
+              style={{ 
+                rotate: useTransform(smoothProgress, [0.3, 0.7], [0, 20]),
+                originX: "1100px",
+                originY: "500px"
+              }}
+            >
+              <path d="M1080 600 V80 H1120 V600" fill="currentColor" opacity="0.4" />
+              <path d="M1100 80 L800 100 V120 L1100 100 Z" fill="currentColor" opacity="0.6" />
+              <path d="M1100 80 L1200 70 V80 L1100 90 Z" fill="currentColor" opacity="0.3" />
+            </motion.g>
+          </g>
+        </svg>
+
         {/* Animated Construction Laser Lines */}
         <motion.div 
-          className="absolute bottom-0 w-full h-[2px] bg-primary/80 shadow-[0_0_15px_#4fc3f7]"
-          style={{ y: useTransform(smoothProgress, [0.3, 0.7], ["0vh", "-60vh"]) }}
+          className="absolute bottom-0 w-full h-[3px] bg-primary/60 shadow-[0_0_20px_#4fc3f7] z-30"
+          style={{ y: useTransform(smoothProgress, [0.2, 0.8], ["0vh", "-75vh"]) }}
         />
-        <motion.div 
-          className="absolute w-[2px] h-[60vh] bottom-0 left-1/4 bg-primary/40"
-          style={{ scaleY: useTransform(smoothProgress, [0.3, 0.6], [0, 1]), originY: 1 }}
-        />
-        <motion.div 
-          className="absolute w-[2px] h-[70vh] bottom-0 left-1/2 bg-secondary/40"
-          style={{ scaleY: useTransform(smoothProgress, [0.4, 0.7], [0, 1]), originY: 1 }}
-        />
-        <motion.div 
-          className="absolute w-[2px] h-[55vh] bottom-0 right-1/4 bg-primary/40"
-          style={{ scaleY: useTransform(smoothProgress, [0.2, 0.5], [0, 1]), originY: 1 }}
-        />
+        
+        {/* Floating Innovation Particles */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(15)].map((_, i) => (
+            <motion.div
+              key={`particle-${i}`}
+              className="absolute w-1 h-1 bg-secondary rounded-full shadow-[0_0_10px_#4fc3f7]"
+              initial={{ x: `${Math.random() * 100}%`, y: "100%", opacity: 0 }}
+              animate={{ 
+                y: ["100%", "20%"], 
+                opacity: [0, 1, 0],
+                scale: [0.5, 1.5, 0.5]
+              }}
+              transition={{ 
+                duration: 3 + Math.random() * 4, 
+                repeat: -1, 
+                delay: Math.random() * 5,
+                ease: "linear"
+              }}
+            />
+          ))}
+        </div>
       </motion.div>
 
 

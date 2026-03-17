@@ -4,10 +4,61 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import { GALLERY_ITEMS } from '@/lib/constants';
+import { constructionAssembly } from '@/lib/animations';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const categories = ['All', 'Cities', 'Innovation', 'Community', 'Infrastructure'];
+
+function GalleryItem({ item }: { item: any }) {
+  const itemRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = itemRef.current;
+    if (!el) return;
+
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 85%',
+      once: true,
+      onEnter: () => constructionAssembly(el, 1.2),
+    });
+  }, []);
+
+  return (
+    <div
+      ref={itemRef}
+      className="flex-shrink-0 w-[85vw] md:w-[500px] lg:w-[600px]"
+      style={{ scrollSnapAlign: 'start' }}
+    >
+      <div className="group relative h-[400px] md:h-[450px] rounded-3xl overflow-hidden shadow-xl">
+        <img
+          src={item.image}
+          alt={item.title}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="px-3 py-1 text-xs font-medium text-white bg-primary/80 backdrop-blur-sm rounded-full">
+              {item.category}
+            </span>
+          </div>
+          <h3 className="text-xl md:text-2xl font-semibold text-white mb-2">
+            {item.title}
+          </h3>
+          <div className="flex items-center gap-2 text-white/70 text-sm">
+            <MapPin className="w-4 h-4" />
+            <span>Africa</span>
+          </div>
+        </div>
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Gallery() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -42,7 +93,7 @@ export default function Gallery() {
           },
         }
       );
-    });
+    }, title);
 
     return () => ctx.revert();
   }, []);
@@ -84,11 +135,10 @@ export default function Gallery() {
       id="gallery"
       className="relative w-full py-24 md:py-32 bg-transparent overflow-hidden"
     >
-      {/* Background */}
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(79,195,247,0.03)_1px,transparent_1px),linear-gradient(rgba(79,195,247,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none" />
 
       <div className="section-container relative z-10">
-        {/* Section Header */}
         <div ref={titleRef} className="mb-12">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div>
@@ -100,8 +150,6 @@ export default function Gallery() {
                 <span className="text-gradient">IN ACTION</span>
               </h2>
             </div>
-
-            {/* Category Filter */}
             <div className="flex flex-wrap gap-2">
               {categories.map((category) => (
                 <button
@@ -120,99 +168,43 @@ export default function Gallery() {
           </div>
         </div>
 
-        {/* Gallery Scroll Container */}
         <div className="relative">
-          {/* Navigation Buttons */}
           <button
             onClick={() => scroll('left')}
             disabled={!canScrollLeft}
             className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center transition-all duration-300 ${
-              canScrollLeft
-                ? 'opacity-100 hover:scale-110'
-                : 'opacity-0 pointer-events-none'
+              canScrollLeft ? 'opacity-100 hover:scale-110' : 'opacity-0 pointer-events-none'
             }`}
-            aria-label="Scroll left"
           >
             <ChevronLeft className="w-6 h-6 text-foreground" />
           </button>
-
           <button
             onClick={() => scroll('right')}
             disabled={!canScrollRight}
             className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center transition-all duration-300 ${
-              canScrollRight
-                ? 'opacity-100 hover:scale-110'
-                : 'opacity-0 pointer-events-none'
+              canScrollRight ? 'opacity-100 hover:scale-110' : 'opacity-0 pointer-events-none'
             }`}
-            aria-label="Scroll right"
           >
             <ChevronRight className="w-6 h-6 text-foreground" />
           </button>
 
-          {/* Scrollable Gallery */}
           <div
             ref={scrollContainerRef}
             className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
             style={{ scrollSnapType: 'x mandatory' }}
           >
-            {filteredItems.map((item, index) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="flex-shrink-0 w-[85vw] md:w-[500px] lg:w-[600px]"
-                style={{ scrollSnapAlign: 'start' }}
-              >
-                <div className="group relative h-[400px] md:h-[450px] rounded-3xl overflow-hidden">
-                  {/* Image */}
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
-
-                  {/* Content */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="px-3 py-1 text-xs font-medium text-white bg-white/20 backdrop-blur-sm rounded-full">
-                        {item.category}
-                      </span>
-                    </div>
-                    <h3 className="text-xl md:text-2xl font-semibold text-white mb-2">
-                      {item.title}
-                    </h3>
-                    <div className="flex items-center gap-2 text-white/70 text-sm">
-                      <MapPin className="w-4 h-4" />
-                      <span>Africa</span>
-                    </div>
-                  </div>
-
-                  {/* Hover Glow */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent" />
-                  </div>
-                </div>
-              </motion.div>
+            {filteredItems.map((item) => (
+              <GalleryItem key={item.id} item={item} />
             ))}
           </div>
         </div>
 
-        {/* Progress Indicator */}
         <div className="mt-8 flex justify-center gap-2">
           {filteredItems.map((_, index) => (
-            <div
-              key={index}
-              className="w-2 h-2 rounded-full bg-primary/20"
-            />
+            <div key={index} className="w-2 h-2 rounded-full bg-primary/20" />
           ))}
         </div>
 
-        {/* Bottom Stats */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -234,7 +226,6 @@ export default function Gallery() {
         </motion.div>
       </div>
 
-      {/* Decorative Elements */}
       <div className="absolute top-1/3 -right-32 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 -left-20 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
     </section>

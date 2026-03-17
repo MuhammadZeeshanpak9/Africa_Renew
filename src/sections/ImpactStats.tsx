@@ -1,9 +1,10 @@
-import { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion } from 'framer-motion';
 import { TrendingUp, Globe, Users, Building2 } from 'lucide-react';
 import { IMPACT_STATS } from '@/lib/constants';
+import { constructionAssembly } from '@/lib/animations';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,13 +14,12 @@ interface StatCardProps {
   suffix: string;
   label: string;
   description: string;
-  icon: any;
+  icon: React.ElementType;
   index: number;
 }
 
 function StatCard({ value, prefix, suffix, label, description, icon: Icon, index }: StatCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const numberRef = useRef<HTMLSpanElement>(null);
   const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
@@ -27,24 +27,13 @@ function StatCard({ value, prefix, suffix, label, description, icon: Icon, index
     if (!card) return;
 
     const ctx = gsap.context(() => {
-      // Card entrance animation
-      gsap.fromTo(
-        card,
-        { opacity: 0, y: 60, scale: 0.9 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          delay: index * 0.15,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: card,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
+      // Card entrance animation - Construction Assembly
+      ScrollTrigger.create({
+        trigger: card,
+        start: 'top 85%',
+        once: true,
+        onEnter: () => constructionAssembly(card, 1.2),
+      });
 
       // Count up animation
       const obj = { val: 0 };
@@ -62,7 +51,6 @@ function StatCard({ value, prefix, suffix, label, description, icon: Icon, index
           toggleActions: 'play none none reverse',
         },
       });
-
     }, card);
 
     return () => ctx.revert();
@@ -76,32 +64,20 @@ function StatCard({ value, prefix, suffix, label, description, icon: Icon, index
       transition={{ duration: 0.3 }}
     >
       <div className="h-full p-8 rounded-3xl glass-card hover:shadow-glow transition-all duration-500">
-        {/* Icon */}
         <div className="w-14 h-14 mb-6 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 text-primary">
           <Icon className="w-7 h-7" />
         </div>
-
-        {/* Number */}
         <div className="mb-4">
-          <span
-            ref={numberRef}
-            className="text-5xl md:text-6xl font-bold text-gradient"
-          >
+          <span className="text-5xl md:text-6xl font-bold text-gradient">
             {prefix}{displayValue.toLocaleString()}{suffix}
           </span>
         </div>
-
-        {/* Label */}
         <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors duration-300">
           {label}
         </h3>
-
-        {/* Description */}
         <p className="text-sm text-muted-foreground">
           {description}
         </p>
-
-        {/* Decorative Glow */}
         <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-primary/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       </div>
     </motion.div>
@@ -116,11 +92,9 @@ export default function ImpactStats() {
   useEffect(() => {
     const title = titleRef.current;
     const particles = particlesRef.current;
-
     if (!title) return;
 
     const ctx = gsap.context(() => {
-      // Title animation
       gsap.fromTo(
         title.children,
         { opacity: 0, y: 40 },
@@ -138,7 +112,6 @@ export default function ImpactStats() {
         }
       );
 
-      // Particle animation
       if (particles) {
         const particleElements = particles.querySelectorAll('.particle');
         particleElements.forEach((particle, i) => {
@@ -153,12 +126,12 @@ export default function ImpactStats() {
           });
         });
       }
-    });
+    }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
-  const iconMap: Record<number, React.ElementType<any>> = {
+  const iconMap: Record<number, React.ElementType> = {
     1: Building2,
     2: Users,
     3: Globe,
@@ -170,7 +143,6 @@ export default function ImpactStats() {
       id="impact"
       className="relative w-full py-24 md:py-32 bg-transparent overflow-hidden"
     >
-      {/* Floating Particles Background */}
       <div ref={particlesRef} className="absolute inset-0 pointer-events-none overflow-hidden">
         {[...Array(20)].map((_, i) => (
           <div
@@ -185,12 +157,9 @@ export default function ImpactStats() {
           />
         ))}
       </div>
-
-      {/* Gradient Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 pointer-events-none" />
 
       <div className="section-container relative z-10">
-        {/* Section Header */}
         <div ref={titleRef} className="text-center mb-16 md:mb-20">
           <span className="inline-block px-4 py-2 mb-6 text-sm font-medium text-primary bg-primary/10 rounded-full">
             Our Impact
@@ -205,7 +174,6 @@ export default function ImpactStats() {
           </p>
         </div>
 
-        {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {IMPACT_STATS.map((stat, index) => (
             <StatCard
@@ -215,13 +183,12 @@ export default function ImpactStats() {
               suffix={stat.suffix}
               label={stat.label}
               description={stat.description}
-              icon={(iconMap[stat.id] || TrendingUp) as any}
+              icon={iconMap[stat.id] || TrendingUp}
               index={index}
             />
           ))}
         </div>
 
-        {/* Additional Metrics */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -247,7 +214,6 @@ export default function ImpactStats() {
           ))}
         </motion.div>
 
-        {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -267,7 +233,6 @@ export default function ImpactStats() {
         </motion.div>
       </div>
 
-      {/* Decorative Elements */}
       <div className="absolute top-1/4 -left-32 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/3 -right-20 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
     </section>

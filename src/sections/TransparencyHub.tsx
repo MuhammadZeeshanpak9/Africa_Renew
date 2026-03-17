@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion } from 'framer-motion';
 import { TrendingUp, Users, DollarSign, Activity } from 'lucide-react';
 import { TRANSPARENCY_METRICS } from '@/lib/constants';
+import { constructionAssembly } from '@/lib/animations';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,7 +19,6 @@ interface MetricCardProps {
 function MetricCard({ label, value, target, unit, index }: MetricCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
-  const valueRef = useRef<HTMLSpanElement>(null);
   const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
@@ -27,24 +27,13 @@ function MetricCard({ label, value, target, unit, index }: MetricCardProps) {
     if (!card || !progress) return;
 
     const ctx = gsap.context(() => {
-      // Card entrance
-      gsap.fromTo(
-        card,
-        { opacity: 0, y: 50, scale: 0.95 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          delay: index * 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: card,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
+      // Card entrance - Construction Assembly
+      ScrollTrigger.create({
+        trigger: card,
+        start: 'top 85%',
+        once: true,
+        onEnter: () => constructionAssembly(card, 1.2),
+      });
 
       // Progress bar animation
       const percentage = (value / target) * 100;
@@ -54,7 +43,7 @@ function MetricCard({ label, value, target, unit, index }: MetricCardProps) {
         {
           width: `${percentage}%`,
           duration: 1.5,
-          delay: 0.3 + index * 0.1,
+          delay: 0.3,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: card,
@@ -69,7 +58,7 @@ function MetricCard({ label, value, target, unit, index }: MetricCardProps) {
       gsap.to(obj, {
         val: value,
         duration: 2,
-        delay: 0.2 + index * 0.1,
+        delay: 0.2,
         ease: 'power2.out',
         onUpdate: () => {
           setDisplayValue(Math.round(obj.val));
@@ -98,13 +87,12 @@ function MetricCard({ label, value, target, unit, index }: MetricCardProps) {
       </div>
 
       <div className="flex items-baseline gap-1 mb-4">
-        <span ref={valueRef} className="text-3xl font-bold text-foreground">
+        <span className="text-3xl font-bold text-foreground">
           {displayValue}
         </span>
         <span className="text-lg text-muted-foreground">{unit}</span>
       </div>
 
-      {/* Progress Bar */}
       <div className="h-2 bg-primary/10 rounded-full overflow-hidden">
         <div
           ref={progressRef}
@@ -113,7 +101,6 @@ function MetricCard({ label, value, target, unit, index }: MetricCardProps) {
         />
       </div>
 
-      {/* Target */}
       <div className="mt-2 text-xs text-muted-foreground">
         Target: {target.toLocaleString()}{unit}
       </div>
@@ -121,7 +108,6 @@ function MetricCard({ label, value, target, unit, index }: MetricCardProps) {
   );
 }
 
-// Circular Progress Component
 function CircularProgress({ 
   value, 
   label, 
@@ -141,7 +127,6 @@ function CircularProgress({
     if (!circle) return;
 
     const ctx = gsap.context(() => {
-      // Circle draw animation
       gsap.fromTo(
         circle,
         { strokeDashoffset: circumference },
@@ -157,7 +142,6 @@ function CircularProgress({
         }
       );
 
-      // Count up
       const obj = { val: 0 };
       gsap.to(obj, {
         val: value,
@@ -181,7 +165,6 @@ function CircularProgress({
     <div className="flex flex-col items-center">
       <div className="relative w-28 h-28">
         <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-          {/* Background Circle */}
           <circle
             cx="50"
             cy="50"
@@ -190,7 +173,6 @@ function CircularProgress({
             stroke="rgba(159, 129, 185, 0.1)"
             strokeWidth="8"
           />
-          {/* Progress Circle */}
           <circle
             ref={circleRef}
             cx="50"
@@ -248,7 +230,7 @@ export default function TransparencyHub() {
           },
         }
       );
-    });
+    }, sectionRef);
 
     return () => ctx.revert();
   }, []);
@@ -259,11 +241,10 @@ export default function TransparencyHub() {
       id="transparency"
       className="relative w-full py-24 md:py-32 bg-transparent overflow-hidden"
     >
-      {/* Background */}
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(79,195,247,0.03)_1px,transparent_1px),linear-gradient(rgba(79,195,247,0.03)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none" />
 
       <div className="section-container relative z-10">
-        {/* Section Header */}
         <div ref={titleRef} className="text-center mb-16">
           <span className="inline-block px-4 py-2 mb-6 text-sm font-medium text-primary bg-primary/10 rounded-full">
             Transparency Hub
@@ -274,13 +255,11 @@ export default function TransparencyHub() {
           </h2>
           <p className="body-lg max-w-2xl mx-auto">
             Real-time metrics and transparent reporting on every initiative,
-            ensuring resources reach their intended destinations.
+            ensuring resources reach their destinations.
           </p>
         </div>
 
-        {/* Dashboard Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-          {/* Main Stats Cards */}
           <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
             {TRANSPARENCY_METRICS.map((metric, index) => (
               <MetricCard
@@ -294,7 +273,6 @@ export default function TransparencyHub() {
             ))}
           </div>
 
-          {/* Circular Progress Indicators */}
           <div className="lg:col-span-4">
             <motion.div
               initial={{ opacity: 0, x: 40 }}
@@ -314,7 +292,6 @@ export default function TransparencyHub() {
           </div>
         </div>
 
-        {/* Live Activity Feed */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -344,7 +321,6 @@ export default function TransparencyHub() {
           </div>
         </motion.div>
 
-        {/* Trust Badges */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -373,7 +349,6 @@ export default function TransparencyHub() {
         </motion.div>
       </div>
 
-      {/* Decorative Elements */}
       <div className="absolute top-1/3 -right-32 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 -left-20 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
     </section>

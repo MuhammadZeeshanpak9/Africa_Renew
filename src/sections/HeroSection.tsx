@@ -64,7 +64,7 @@ export default function HeroSection() {
     <section
       ref={sectionRef}
       id="hero"
-      className="relative w-full h-screen overflow-hidden bg-transparent"
+      className="relative w-full h-screen overflow-hidden bg-white z-[5]"
     >
       {/* 2D Background removed - now global */}
 
