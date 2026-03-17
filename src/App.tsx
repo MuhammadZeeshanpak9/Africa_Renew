@@ -125,7 +125,7 @@ function App() {
       <Navbar />
 
       {/* Main Content */}
-      <main className="relative z-10 lg:pl-64">
+      <main className="relative z-10 lg:pl-20">
         {/* Hero Section - Pinned */}
         <HeroSection />
 

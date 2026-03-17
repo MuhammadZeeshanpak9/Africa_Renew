@@ -48,32 +48,26 @@ export default function Navbar() {
 
   return (
     <>
-      {/* DESKTOP SIDEBAR */}
+      {/* DESKTOP SLIM SIDEBAR */}
       <nav
         ref={navRef}
-        className="fixed top-0 left-0 h-screen w-64 z-50 hidden lg:flex flex-col bg-white/40 backdrop-blur-2xl border-r border-primary/10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]"
+        className="fixed top-0 left-0 h-screen w-20 z-50 hidden lg:flex flex-col items-center bg-white/40 backdrop-blur-2xl border-r border-primary/10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]"
       >
         {/* Sidebar Header: Logo */}
-        <div className="p-8 pb-12">
+        <div className="py-10">
           <a
             href="#hero"
             onClick={(e) => { e.preventDefault(); scrollToSection('#hero'); }}
-            className="flex flex-col gap-4 group"
+            className="flex flex-col items-center group"
           >
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20 rotate-3 group-hover:rotate-0 transition-transform duration-500">
               <span className="text-white font-bold text-xl drop-shadow-sm">A</span>
-            </div>
-            <div>
-              <p className="font-bold text-xl tracking-tight text-foreground">
-                Africa<span className="text-primary italic">Renew</span>
-              </p>
-              <p className="text-[10px] uppercase tracking-[0.2em] font-medium text-muted-foreground/60">Continental Scale</p>
             </div>
           </a>
         </div>
 
         {/* Sidebar Links */}
-        <div className="flex-1 px-4 space-y-2">
+        <div className="flex-1 flex flex-col items-center gap-4 px-2">
           {NAV_LINKS.map((link, index) => {
             const Icon = iconMap[link.icon as string] || Target;
             return (
@@ -83,30 +77,23 @@ export default function Navbar() {
                 onClick={(e) => { e.preventDefault(); scrollToSection(link.href); }}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
-                className="group relative flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 hover:bg-white/60 overflow-hidden"
+                className="group relative flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-300 hover:bg-white/60"
               >
-                <div className={`relative z-10 p-2 rounded-xl transition-colors duration-300 ${hoveredIndex === index ? 'bg-primary text-white' : 'bg-primary/5 text-primary'}`}>
-                  <Icon size={18} />
+                <div className={`relative z-10 transition-colors duration-300 ${hoveredIndex === index ? 'text-primary scale-110' : 'text-muted-foreground'}`}>
+                  <Icon size={22} />
                 </div>
-                <span className={`relative z-10 font-medium text-sm transition-colors duration-300 ${hoveredIndex === index ? 'text-foreground font-semibold' : 'text-muted-foreground'}`}>
-                  {link.label}
-                </span>
 
-                {/* Animated Background Blob */}
-                {hoveredIndex === index && (
-                  <motion.div
-                    layoutId="sidebar-hover"
-                    className="absolute inset-0 bg-white shadow-sm -z-0"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  />
-                )}
-                
+                {/* Tooltip-style Label */}
+                <div className={`absolute left-full ml-4 px-3 py-1.5 rounded-xl bg-foreground text-background text-xs font-semibold whitespace-nowrap opacity-0 pointer-events-none translate-x-[-10px] group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 shadow-xl`}>
+                  {link.label}
+                  <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-foreground rotate-45" />
+                </div>
+
+                {/* Active Indicator */}
                 {hoveredIndex === index && (
                   <motion.div 
                     layoutId="sidebar-accent"
-                    className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full"
+                    className="absolute left-[-10px] top-1/2 -translate-y-1/2 w-1.5 h-6 bg-primary rounded-r-full"
                   />
                 )}
               </a>
@@ -115,25 +102,17 @@ export default function Navbar() {
         </div>
 
         {/* Sidebar Footer */}
-        <div className="p-6 mt-auto">
-          <div className="p-4 rounded-3xl bg-foreground text-background flex flex-col gap-4 shadow-xl shadow-foreground/10 mb-8">
-            <p className="text-xs font-medium opacity-60">Ready to transform?</p>
-            <a
-              href="#cta"
-              onClick={(e) => { e.preventDefault(); scrollToSection('#cta'); }}
-              className="group flex items-center justify-between font-semibold"
-            >
-              Start Now
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:translate-x-1 transition-transform">
-                <ArrowRight size={14} />
-              </div>
-            </a>
-          </div>
+        <div className="pb-10 flex flex-col items-center gap-6">
+          <a
+            href="#cta"
+            onClick={(e) => { e.preventDefault(); scrollToSection('#cta'); }}
+            className="w-12 h-12 rounded-2xl bg-foreground text-background flex items-center justify-center shadow-lg shadow-foreground/10 hover:bg-primary transition-colors group"
+          >
+            <Rocket size={20} className="group-hover:translate-y-[-2px] transition-transform" />
+          </a>
 
-          <div className="flex items-center justify-center gap-4 text-muted-foreground/40 hover:text-primary transition-colors duration-500">
-            <Globe size={16} />
-            <div className="h-[1px] w-8 bg-current opacity-20" />
-            <span className="text-[10px] font-bold tracking-widest uppercase">Global</span>
+          <div className="text-muted-foreground/20 hover:text-primary transition-colors duration-500">
+            <Globe size={18} />
           </div>
         </div>
       </nav>
