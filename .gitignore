@@ -1,0 +1,14 @@
+# dependencies
+node_modules
+app/node_modules
+
+# build
+dist
+build
+.vercel
+
+# env
+.env
+
+# misc
+.DS_Store
