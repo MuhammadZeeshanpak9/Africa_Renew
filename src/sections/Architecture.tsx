@@ -213,7 +213,7 @@ export default function Architecture() {
           {/* Cards Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 relative z-10">
             {ARCHITECTURE_CARDS.map((card, index) => {
-              const Icon = iconMap[card.icon];
+              const Icon = iconMap[card.icon] as React.ElementType<any>;
               return (
                 <motion.div
                   key={card.id}

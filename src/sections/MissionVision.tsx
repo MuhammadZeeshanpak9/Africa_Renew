@@ -114,7 +114,7 @@ export default function MissionVision() {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8"
         >
           {MISSION_CARDS.map((card, index) => {
-            const Icon = iconMap[card.icon];
+            const Icon = iconMap[card.icon] as React.ElementType<any>;
             return (
               <motion.div
                 key={card.id}

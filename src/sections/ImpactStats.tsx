@@ -215,7 +215,7 @@ export default function ImpactStats() {
               suffix={stat.suffix}
               label={stat.label}
               description={stat.description}
-              icon={iconMap[stat.id] || TrendingUp}
+              icon={(iconMap[stat.id] || TrendingUp) as React.ElementType<any>}
               index={index}
             />
           ))}
