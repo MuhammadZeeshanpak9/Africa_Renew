@@ -13,7 +13,7 @@ interface StatCardProps {
   suffix: string;
   label: string;
   description: string;
-  icon: React.ElementType;
+  icon: React.ElementType<any>;
   index: number;
 }
 
@@ -158,7 +158,7 @@ export default function ImpactStats() {
     return () => ctx.revert();
   }, []);
 
-  const iconMap: Record<number, React.ElementType> = {
+  const iconMap: Record<number, React.ElementType<any>> = {
     1: Building2,
     2: Users,
     3: Globe,

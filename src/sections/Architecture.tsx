@@ -7,7 +7,7 @@ import { ARCHITECTURE_CARDS } from '@/lib/constants';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const iconMap: Record<string, React.ElementType> = {
+const iconMap: Record<string, React.ElementType<any>> = {
   Shield,
   Map,
   Users,

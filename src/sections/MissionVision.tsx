@@ -7,7 +7,7 @@ import { MISSION_CARDS } from '@/lib/constants';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const iconMap: Record<string, React.ElementType> = {
+const iconMap: Record<string, React.ElementType<any>> = {
   Crown,
   Building2,
   TrendingUp,
