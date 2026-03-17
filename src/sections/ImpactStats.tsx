@@ -13,7 +13,7 @@ interface StatCardProps {
   suffix: string;
   label: string;
   description: string;
-  icon: React.ElementType<any>;
+  icon: any;
   index: number;
 }
 
@@ -215,7 +215,7 @@ export default function ImpactStats() {
               suffix={stat.suffix}
               label={stat.label}
               description={stat.description}
-              icon={(iconMap[stat.id] || TrendingUp) as React.ElementType<any>}
+              icon={(iconMap[stat.id] || TrendingUp) as any}
               index={index}
             />
           ))}

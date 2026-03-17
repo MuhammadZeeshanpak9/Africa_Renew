@@ -2,12 +2,12 @@ import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion } from 'framer-motion';
-import { Shield, Map, Users, Check } from 'lucide-react';
+import { Shield, Map, Users, Check, type LucideIcon } from 'lucide-react';
 import { ARCHITECTURE_CARDS } from '@/lib/constants';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const iconMap: Record<string, React.ElementType<any>> = {
+const iconMap: Record<string, LucideIcon> = {
   Shield,
   Map,
   Users,
@@ -213,7 +213,7 @@ export default function Architecture() {
           {/* Cards Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 relative z-10">
             {ARCHITECTURE_CARDS.map((card, index) => {
-              const Icon = iconMap[card.icon] as React.ElementType<any>;
+              const Icon = iconMap[card.icon] as any;
               return (
                 <motion.div
                   key={card.id}

@@ -129,7 +129,7 @@ function CircularProgress({
 }: { 
   value: number; 
   label: string; 
-  icon: React.ElementType<any>;
+  icon: any;
 }) {
   const circleRef = useRef<SVGCircleElement>(null);
   const [displayValue, setDisplayValue] = useState(0);
