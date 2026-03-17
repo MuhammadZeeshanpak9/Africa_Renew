@@ -59,6 +59,7 @@ function App() {
   }, []);
 
   // Setup global scroll snap for pinned sections
+  /* 
   useEffect(() => {
     // Wait for all ScrollTriggers to be created
     const timer = setTimeout(() => {
@@ -108,6 +109,7 @@ function App() {
       clearTimeout(timer);
     };
   }, []);
+  */
 
   return (
     <div className="relative min-h-screen bg-white overflow-x-hidden">
