@@ -3,223 +3,298 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
 export default function CityTransition2D() {
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // Setup Framer Motion scroll tracking for the whole page
   const { scrollYProgress } = useScroll();
-
-  // Smooth the scroll progress so animations feel less rigid
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001
   });
 
-  // Layer 1: Old City (Dilapidated, basic blocks)
-  // Visible at start, fades out specifically between 10% and 50% scroll
   const oldCityOpacity = useTransform(smoothProgress, [0, 0.2, 0.5], [1, 1, 0]);
-  const oldCityY = useTransform(smoothProgress, [0, 0.5], ["0%", "10%"]);
+  const oldCityY = useTransform(smoothProgress, [0, 0.5], ['0%', '10%']);
   const oldCityScale = useTransform(smoothProgress, [0, 0.5], [1, 0.95]);
 
-  // Layer 2: New City (Glowing, modern skyscrapers)
-  // Starts appearing around 20% scroll, fully realized by 80%
   const newCityOpacity = useTransform(smoothProgress, [0.2, 0.6, 1], [0, 1, 1]);
-  const newCityY = useTransform(smoothProgress, [0, 0.5, 1], ["10%", "5%", "0%"]);
+  const newCityY = useTransform(smoothProgress, [0, 0.5, 1], ['10%', '5%', '0%']);
   const newCityScale = useTransform(smoothProgress, [0, 1], [0.95, 1.05]);
-
-  // Clip Path wipe effect for the new city - matches the transformation start
   const newCityClip = useTransform(
-    smoothProgress, 
-    [0.2, 0.7], 
-    ["inset(100% 0 0 0)", "inset(0% 0 0 0)"]
+    smoothProgress,
+    [0.2, 0.7],
+    ['inset(100% 0 0 0)', 'inset(0% 0 0 0)']
   );
 
-  // Construction Grid/Lines (Scaffolding that appears in the middle of transition)
   const scaffoldOpacity = useTransform(smoothProgress, [0.2, 0.5, 0.8], [0, 0.6, 0]);
-  const scaffoldY = useTransform(smoothProgress, [0, 1], ["5%", "-5%"]);
+  const scaffoldY = useTransform(smoothProgress, [0, 1], ['5%', '-5%']);
+
+  // Generates glass reflections instead of dotted windows
+  const glassReflections = (
+    bx: number, by: number, bw: number, bh: number, stripeW: number, gap: number
+  ) => {
+    const els: JSX.Element[] = [];
+    const numStripes = Math.floor(bx / (stripeW + gap));
+    for (let x = bx + gap; x < bx + bw - stripeW; x += stripeW + gap) {
+      els.push(
+        <rect
+          key={`gl-${bx}-${x}`}
+          x={x} y={by} width={stripeW} height={bh}
+          fill="url(#nc-glass-reflect)"
+          opacity={0.3 + Math.random() * 0.4}
+        />
+      );
+    }
+    return els;
+  }
 
   return (
     <div ref={containerRef} className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none bg-white">
-      
-      {/* Background Ambient Glow */}
-      <motion.div 
-        className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_bottom,rgba(159,129,185,0.15),transparent_70%)]"
-        style={{ opacity: newCityOpacity }}
+
+      {/* Subtle sky gradient ambient overlay */}
+      <motion.div
+        className="absolute inset-0 z-0"
+        style={{
+          opacity: newCityOpacity,
+        }}
       />
 
-      {/* ----------- LAYER 1: OLD CITY ----------- */}
-      <motion.div 
-        className="absolute bottom-0 w-full h-[60vh] z-10 flex items-end justify-center"
+      {/* ═══════════════ LAYER 1: OLD CITY (Grayscale Silhouettes) ═══════════════ */}
+      <motion.div
+        className="absolute bottom-0 w-full h-[65vh] z-10 flex items-end"
         style={{ opacity: oldCityOpacity, y: oldCityY, scale: oldCityScale }}
       >
-        <svg viewBox="0 0 1440 400" className="w-full h-full object-cover origin-bottom opacity-20 grayscale brightness-50">
-          {/* Base ground layer */}
-          <rect x="0" y="380" width="1440" height="20" fill="currentColor" />
-          
-          {/* Old Buildings - Blocky, simple, damaged */}
-          <path d="M50 380 V250 H120 V380 Z" fill="#1A1A1A" opacity="0.8" />
-          <path d="M150 380 V180 H250 V380 Z" fill="#2A2A2A" opacity="0.7" />
-          <path d="M280 380 V120 H380 V150 H420 V380 Z" fill="#1F1F1F" opacity="0.6" />
-          <path d="M480 380 V200 L520 180 V380 Z" fill="#262626" opacity="0.8" />
-          <path d="M560 380 V100 H700 V120 H740 V380 Z" fill="#151515" opacity="0.9" />
-          
-          <path d="M780 380 V160 H850 V380 Z" fill="#1A1A1A" opacity="0.5" />
-          <path d="M880 380 V220 H980 V380 Z" fill="#222222" opacity="0.7" />
-          <path d="M1020 380 V90 H1120 V140 H1160 V380 Z" fill="#1F1F1F" opacity="0.8" />
-          <path d="M1200 380 V240 H1300 V380 Z" fill="#2A2A2A" opacity="0.6" />
-          <path d="M1350 380 V170 H1420 V380 Z" fill="#1A1A1A" opacity="0.7" />
+        <svg viewBox="0 0 1440 500" className="w-full h-full" preserveAspectRatio="xMidYMax meet">
+          <defs>
+            <linearGradient id="oc-tower" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#d0d5d9" />
+              <stop offset="100%" stopColor="#f0f2f5" />
+            </linearGradient>
+            <linearGradient id="oc-side" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#b0b5bg" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#e0e5ea" stopOpacity="0.4" />
+            </linearGradient>
+          </defs>
 
-          {/* Random old windows (dark) */}
-          {[...Array(30)].map((_, i) => (
-            <rect 
-              key={`old-win-${i}`}
-              x={100 + (i * 41) % 1200} 
-              y={150 + (i * 67) % 200} 
-              width="8" height="12" 
-              fill="#000" 
-              opacity="0.3" 
-            />
-          ))}
+          {/* Background hazy layer */}
+          <g fill="#e6e9ec" opacity="0.6">
+            <rect x="0" y="280" width="160" height="220" rx="1" />
+            <rect x="180" y="250" width="100" height="250" rx="1" />
+            <rect x="360" y="300" width="90" height="200" rx="1" />
+            <rect x="520" y="260" width="180" height="240" rx="1" />
+            <rect x="800" y="290" width="120" height="210" rx="1" />
+            <rect x="1050" y="260" width="140" height="240" rx="1" />
+            <rect x="1280" y="310" width="110" height="190" rx="1" />
+          </g>
+
+          {/* Foreground flat silhouettes */}
+          <g fill="url(#oc-tower)">
+            <rect x="40" y="200" width="110" height="300" rx="1" />
+            <rect x="220" y="140" width="80" height="360" rx="1" />
+            <rect x="340" y="280" width="150" height="220" rx="1" />
+            {/* Centerpiece old tower */}
+            <rect x="580" y="80" width="130" height="420" rx="1" />
+            <rect x="610" y="50" width="70" height="30" rx="1" />
+            <rect x="635" y="10" width="20" height="40" />
+            
+            <rect x="760" y="180" width="110" height="320" rx="1" />
+            <rect x="940" y="120" width="90" height="380" rx="1" />
+            <rect x="1100" y="240" width="160" height="260" rx="1" />
+            <rect x="1320" y="190" width="100" height="310" rx="1" />
+          </g>
+
+          {/* Shading/Depth marks */}
+          <g fill="rgba(0,0,0,0.04)">
+            <rect x="130" y="200" width="20" height="300" />
+            <rect x="280" y="140" width="20" height="360" />
+            <rect x="470" y="280" width="20" height="220" />
+            <rect x="680" y="80" width="30" height="420" />
+            <rect x="850" y="180" width="20" height="320" />
+            <rect x="1010" y="120" width="20" height="380" />
+            <rect x="1230" y="240" width="30" height="260" />
+            <rect x="1400" y="190" width="20" height="310" />
+          </g>
+
         </svg>
       </motion.div>
 
-      {/* ----------- LAYER 1.5: SCAFFOLDING / CONSTRUCTION ----------- */}
+      {/* ═══════════════ LAYER 1.5: SCAFFOLDING ═══════════════ */}
       <motion.div
         className="absolute bottom-0 w-full h-[70vh] z-20"
         style={{ opacity: scaffoldOpacity, y: scaffoldY }}
       >
-        {/* Blueprint Grid Background */}
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(79,195,247,0.08)_1.5px,transparent_1.5px),linear-gradient(rgba(79,195,247,0.08)_1.5px,transparent_1.5px)] bg-[size:60px_60px] md:bg-[size:100px_100px]" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(79,195,247,0.04)_1px,transparent_1px),linear-gradient(rgba(79,195,247,0.04)_1px,transparent_1px)] bg-[size:20px_20px] md:bg-[size:25px_25px]" />
+        {/* Subtle grid base */}
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,100,255,0.03)_1.5px,transparent_1.5px),linear-gradient(rgba(0,100,255,0.03)_1.5px,transparent_1.5px)] bg-[size:60px_60px]" />
         
-        {/* Construction Visuals - Cranes & Scaffolding */}
-        <svg viewBox="0 0 1440 600" className="absolute bottom-0 w-full h-[600px] text-primary/30">
-          <defs>
-            <pattern id="scaffoldPattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M0 0 L40 40 M40 0 L0 40 M0 20 H40 M20 0 V40" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            </pattern>
-          </defs>
+        {/* Minimalist blueprint lines */}
+        <svg viewBox="0 0 1440 600" className="absolute bottom-0 w-full h-[600px]">
+          <g stroke="rgba(0,120,255,0.3)" strokeWidth="1" fill="none">
+            {/* Evolving mesh frames */}
+            <path d="M220 600 V180 H330 V600" />
+            <path d="M220 250 H330 M220 320 H330 M220 390 H330 M220 460 H330" />
+            
+            <path d="M570 600 V100 H720 V600" />
+            <path d="M570 180 H720 M570 260 H720 M570 340 H720 M570 420 H720" />
+            
+            <path d="M930 600 V160 H1040 V600" />
+            <path d="M930 240 H1040 M930 320 H1040 M930 400 H1040 M930 480 H1040" />
 
-          {/* Scaffolding Blocks */}
-          <rect x="200" y="200" width="100" height="400" fill="url(#scaffoldPattern)" />
-          <rect x="550" y="100" width="120" height="500" fill="url(#scaffoldPattern)" />
-          <rect x="950" y="150" width="80" height="450" fill="url(#scaffoldPattern)" />
-
-          {/* Construction Cranes */}
-          <g className="crane-1">
-            <motion.g
-              style={{ 
-                rotate: useTransform(smoothProgress, [0.2, 0.6], [0, -15]),
-                originX: "400px",
-                originY: "500px"
-              }}
-            >
-              <path d="M380 600 V150 H420 V600" fill="currentColor" opacity="0.4" />
-              <path d="M400 150 L600 120 V140 L400 160 Z" fill="currentColor" opacity="0.6" />
-              <path d="M400 150 L250 165 V175 L400 160 Z" fill="currentColor" opacity="0.3" />
-            </motion.g>
-          </g>
-
-          <g className="crane-2">
-            <motion.g
-              style={{ 
-                rotate: useTransform(smoothProgress, [0.3, 0.7], [0, 20]),
-                originX: "1100px",
-                originY: "500px"
-              }}
-            >
-              <path d="M1080 600 V80 H1120 V600" fill="currentColor" opacity="0.4" />
-              <path d="M1100 80 L800 100 V120 L1100 100 Z" fill="currentColor" opacity="0.6" />
-              <path d="M1100 80 L1200 70 V80 L1100 90 Z" fill="currentColor" opacity="0.3" />
-            </motion.g>
+            <path d="M1250 600 V260 H1380 V600" />
+            <path d="M1250 340 H1380 M1250 420 H1380 M1250 500 H1380" />
           </g>
         </svg>
 
-        {/* Animated Construction Laser Lines */}
-        <motion.div 
-          className="absolute bottom-0 w-full h-[3px] bg-primary/60 shadow-[0_0_20px_#4fc3f7] z-30"
-          style={{ y: useTransform(smoothProgress, [0.2, 0.8], ["0vh", "-75vh"]) }}
+        {/* Laser scanner line effect */}
+        <motion.div
+          className="absolute bottom-0 w-full h-[2px] bg-blue-500/40 shadow-[0_0_15px_rgba(0,150,255,0.6)] z-30"
+          style={{ y: useTransform(smoothProgress, [0.2, 0.8], ['0vh', '-75vh']) }}
         />
-        
-        {/* Floating Innovation Particles */}
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(15)].map((_, i) => (
-            <motion.div
-              key={`particle-${i}`}
-              className="absolute w-1 h-1 bg-secondary rounded-full shadow-[0_0_10px_#4fc3f7]"
-              initial={{ x: `${Math.random() * 100}%`, y: "100%", opacity: 0 }}
-              animate={{ 
-                y: ["100%", "20%"], 
-                opacity: [0, 1, 0],
-                scale: [0.5, 1.5, 0.5]
-              }}
-              transition={{ 
-                duration: 3 + Math.random() * 4, 
-                repeat: -1, 
-                delay: Math.random() * 5,
-                ease: "linear"
-              }}
-            />
-          ))}
-        </div>
       </motion.div>
 
-
-      {/* ----------- LAYER 2: NEW CITY ----------- */}
-      <motion.div 
-        className="absolute bottom-0 w-full h-[75vh] z-30 flex items-end justify-center drop-shadow-[0_-10px_30px_rgba(159,129,185,0.2)]"
-        style={{ 
-          opacity: newCityOpacity, 
-          y: newCityY, 
-          scale: newCityScale,
-          clipPath: newCityClip 
-        }}
+      {/* ═══════════════ LAYER 2: NEW CITY (Modern Geometric Glass) ═══════════════ */}
+      <motion.div
+        className="absolute bottom-0 w-full h-[78vh] z-30"
+        style={{ opacity: newCityOpacity, y: newCityY, scale: newCityScale, clipPath: newCityClip }}
       >
-        <svg viewBox="0 0 1440 500" className="w-full h-full object-cover origin-bottom text-foreground">
+        <svg viewBox="0 0 1440 520" className="w-full h-full drop-shadow-[0_15px_30px_rgba(0,40,100,0.1)]" preserveAspectRatio="xMidYMax meet">
           <defs>
-            <linearGradient id="newCityGrad1" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#9f81b9" />
-              <stop offset="100%" stopColor="currentColor" />
+            {/* Very sleek, high-contrast flat gradients for glass effect */}
+            <linearGradient id="nc-base" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#1a2530" />
+              <stop offset="100%" stopColor="#0d141c" />
             </linearGradient>
-            <linearGradient id="newCityGrad2" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#4fc3f7" />
-              <stop offset="100%" stopColor="currentColor" />
+            
+            <linearGradient id="nc-glass-front" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#253545" />
+              <stop offset="100%" stopColor="#15202c" />
+            </linearGradient>
+            
+            <linearGradient id="nc-glass-reflect" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.08" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0.0" />
+            </linearGradient>
+
+            <linearGradient id="nc-edge-hl" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#4fc3f7" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#4fc3f7" stopOpacity="0" />
+            </linearGradient>
+
+            <linearGradient id="nc-light-bloom" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%" stopColor="#e3f2fd" stopOpacity="0.1" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+            </linearGradient>
+            
+            {/* Sharp geometric shadows */}
+            <linearGradient id="nc-shadow" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#050a10" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#050a10" stopOpacity="0.2" />
             </linearGradient>
           </defs>
 
-          {/* New Modern Skyscrapers - Sleek, angular, overlapping */}
-          
-          {/* Back layer new buildings */}
-          <path d="M120 500 L160 200 H280 L320 500 Z" fill="url(#newCityGrad1)" opacity="0.4" />
-          <path d="M400 500 L420 150 H500 L540 500 Z" fill="url(#newCityGrad2)" opacity="0.3" />
-          <path d="M800 500 L850 120 H950 L1000 500 Z" fill="url(#newCityGrad1)" opacity="0.4" />
-          <path d="M1100 500 L1150 180 H1250 L1300 500 Z" fill="url(#newCityGrad2)" opacity="0.3" />
+          {/* Clean flat horizon line */}
+          <rect x="0" y="490" width="1440" height="30" fill="#080c12" />
+          <line x1="0" y1="490" x2="1440" y2="490" stroke="#4fc3f7" strokeWidth="1.5" opacity="0.6" />
 
-          {/* Front layer hero new buildings */}
-          <path d="M200 500 V150 L250 100 L300 150 V500 Z" fill="#0F172A" />
-          <path d="M350 500 V220 L400 180 V500 Z" fill="#1E293B" />
-          <path d="M500 500 V80 L580 40 H680 V500 Z" fill="#020617" />
-          <path d="M720 500 V180 L760 140 H840 L880 180 V500 Z" fill="#1E293B" />
-          <path d="M920 500 V120 L960 80 H1020 V500 Z" fill="#0F172A" />
-          <path d="M1060 500 V250 H1180 V500 Z" fill="#1E293B" />
-          
-          {/* Glowing Windows Patterns */}
-          <g opacity="0.8">
-            {[...Array(50)].map((_, i) => (
-              <rect 
-                key={`new-win-${i}`}
-                x={220 + (i * 37) % 950} 
-                y={100 + (i * 53) % 350} 
-                width={4 + (i%3)*2} 
-                height={15 + (i%2)*10} 
-                fill={(i % 5 === 0) ? "#4fc3f7" : (i % 3 === 0) ? "#9f81b9" : "#ffffff"} 
-                className="animate-pulse"
-                style={{ animationDelay: `${(i % 5) * 0.5}s`, animationDuration: `${2 + (i % 3)}s` }}
-              />
-            ))}
+          {/* ── BACKGROUND: Minimalist Silhouettes ── */}
+          <g fill="#a2b3c4" opacity="0.3">
+            <polygon points="40,490 60,320 140,320 160,490" />
+            <rect x="260" y="280" width="80" height="210" />
+            <rect x="380" y="340" width="160" height="150" />
+            <polygon points="800,490 850,220 890,220 940,490" />
+            <rect x="1000" y="300" width="120" height="190" />
+            <rect x="1220" y="270" width="140" height="220" />
           </g>
+
+          {/* ── FOREGROUND: Sleek Architectural Vectors ── */}
+          
+          {/* Tower 1 - Slanted Glass Edge */}
+          <polygon points="80,490 120,160 180,160 210,490" fill="url(#nc-base)" />
+          <polygon points="120,160 180,160 150,490 80,490" fill="url(#nc-glass-front)" />
+          {/* Vertical mullions instead of windows */}
+          <polygon points="120,160 125,160 100,490 80,490" fill="rgba(255,255,255,0.05)" />
+          <polygon points="150,160 155,160 130,490 115,490" fill="rgba(255,255,255,0.05)" />
+          <polygon points="175,160 180,160 210,490 190,490" fill="url(#nc-shadow)" />
+          {/* Accent light edge */}
+          <line x1="120" y1="160" x2="80" y2="490" stroke="#4fc3f7" strokeWidth="2" opacity="0.9" />
+
+          {/* Tower 2 - Boxy Modernist */}
+          <rect x="250" y="220" width="110" height="270" fill="url(#nc-glass-front)" />
+          <rect x="360" y="240" width="25" height="250" fill="url(#nc-shadow)" />
+          <rect x="250" y="220" width="110" height="4" fill="#64b5f6" />
+          {/* Horizontal sleek banding */}
+          {[250, 290, 330, 370, 410, 450].map(y => (
+            <line key={y} x1="250" x2="360" y1={y} y2={y} stroke="#101822" strokeWidth="8" />
+          ))}
+          {/* Thin light strips */}
+          {[274, 314, 354, 394, 434, 474].map(y => (
+            <line key={y} x1="250" x2="360" y1={y} y2={y} stroke="#4fc3f7" strokeWidth="1" opacity="0.5" />
+          ))}
+
+          {/* Tower 3 - THE CENTERPIECE (Sleek Obelisk) */}
+          {/* Base structure */}
+          <polygon points="460,490 510,50 610,50 660,490" fill="url(#nc-base)" />
+          <polygon points="490,490 510,50 610,50 630,490" fill="url(#nc-glass-front)" />
+          {/* Depth shadowing on right side */}
+          <polygon points="610,50 660,490 630,490" fill="url(#nc-shadow)" />
+          
+          {/* Very sharp vertical reflections */}
+          <polygon points="510,50 530,50 540,490 490,490" fill="url(#nc-glass-reflect)" />
+          <polygon points="560,50 570,50 580,490 560,490" fill="url(#nc-glass-reflect)" />
+          
+          {/* Spire */}
+          <polygon points="545,50 560,-20 575,50" fill="url(#nc-edge-hl)" />
+          {/* Center glowing rib */}
+          <line x1="560" y1="-20" x2="560" y2="490" stroke="#e3f2fd" strokeWidth="1" opacity="0.8" />
+          {/* Horizontal structural rings */}
+          {[120, 220, 320, 420].map(y => (
+            <line key={y} x1={510 - (y-50)*0.045} x2={610 + (y-50)*0.045} y1={y} y2={y} stroke="#4fc3f7" strokeWidth="2" opacity="0.8" />
+          ))}
+
+          {/* Tower 4 - Stacked Volumes */}
+          <rect x="730" y="280" width="130" height="210" fill="url(#nc-base)" />
+          <rect x="750" y="200" width="90" height="80" fill="url(#nc-glass-front)" />
+          <rect x="770" y="140" width="50" height="60" fill="url(#nc-base)" />
+          <rect x="850" y="280" width="20" height="210" fill="url(#nc-shadow)" />
+          <rect x="830" y="200" width="20" height="80" fill="url(#nc-shadow)" />
+          
+          <rect x="730" y="278" width="130" height="3" fill="#64b5f6" />
+          <rect x="750" y="198" width="90" height="3" fill="#64b5f6" />
+          <rect x="770" y="138" width="50" height="3" fill="#64b5f6" />
+          
+          {/* Large flat reflective panels */}
+          <rect x="740" y="285" width="20" height="205" fill="rgba(255,255,255,0.06)" />
+          <rect x="780" y="285" width="20" height="205" fill="rgba(255,255,255,0.03)" />
+          <rect x="815" y="285" width="15" height="205" fill="rgba(255,255,255,0.06)" />
+
+          {/* Tower 5 - Cylindrical/Curved Glass Illusion */}
+          <rect x="910" y="180" width="120" height="310" fill="url(#nc-glass-front)" rx="4" />
+          {/* Curved gradient mapping for cylinder effect */}
+          <rect x="910" y="180" width="20" height="310" fill="rgba(0,0,0,0.5)" />
+          <rect x="930" y="180" width="20" height="310" fill="rgba(0,0,0,0.2)" />
+          <rect x="990" y="180" width="20" height="310" fill="rgba(255,255,255,0.05)" />
+          <rect x="1010" y="180" width="20" height="310" fill="rgba(0,0,0,0.3)" />
+          
+          <rect x="910" y="180" width="120" height="4" fill="#4fc3f7" opacity="0.8" />
+          <rect x="940" y="160" width="60" height="20" fill="url(#nc-base)" />
+          {glassReflections(910, 184, 120, 306, 12, 10)}
+
+          {/* Tower 6 - Wide Modern Campus Hub */}
+          <rect x="1080" y="320" width="210" height="170" fill="url(#nc-glass-front)" />
+          <rect x="1100" y="260" width="150" height="60" fill="url(#nc-base)" />
+          <rect x="1120" y="200" width="100" height="60" fill="url(#nc-glass-front)" />
+          <rect x="1290" y="320" width="20" height="170" fill="url(#nc-shadow)" />
+          <rect x="1250" y="260" width="15" height="60" fill="url(#nc-shadow)" />
+          
+          <line x1="1080" y1="320" x2="1290" y2="320" stroke="#4fc3f7" strokeWidth="2" />
+          <line x1="1100" y1="260" x2="1250" y2="260" stroke="#4fc3f7" strokeWidth="2" />
+          <line x1="1120" y1="200" x2="1220" y2="200" stroke="#4fc3f7" strokeWidth="2" />
+          {glassReflections(1085, 325, 200, 165, 20, 15)}
+          {glassReflections(1125, 205, 90, 55, 10, 10)}
+
+          {/* Tower 7 - Thin Edge Tower */}
+          <polygon points="1350,490 1370,120 1390,490" fill="url(#nc-glass-front)" />
+          <polygon points="1370,120 1410,490 1390,490" fill="url(#nc-shadow)" />
+          <line x1="1370" y1="120" x2="1350" y2="490" stroke="#4fc3f7" strokeWidth="1.5" />
+          <line x1="1370" y1="120" x2="1390" y2="490" stroke="#4fc3f7" strokeWidth="1.5" />
         </svg>
       </motion.div>
-
     </div>
   );
 }

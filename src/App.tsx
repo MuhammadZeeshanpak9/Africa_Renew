@@ -17,7 +17,7 @@ import CTASection from './sections/CTASection';
 import Footer from './sections/Footer';
 
 // Backgrounds
-import CityTransition2D from './components/backgrounds/CityTransition2D';
+import CityTransition3D from './components/backgrounds/CityTransition3D';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -118,7 +118,7 @@ function App() {
     <div className="relative min-h-screen bg-transparent overflow-x-hidden">
       {/* Global Animated Background */}
       <div className="fixed inset-0 z-0">
-        <CityTransition2D />
+        <CityTransition3D />
       </div>
 
       {/* Navigation */}
