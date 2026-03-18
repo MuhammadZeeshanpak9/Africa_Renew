@@ -61,7 +61,7 @@ export default function Footer() {
                 <span className="text-white font-bold text-xl">A</span>
               </div>
               <span className="font-semibold text-xl">
-                Africa<span className="text-primary">Next</span>
+                Africa<span className="text-primary">Renew</span>
               </span>
             </a>
             <p className="text-muted-foreground text-sm leading-relaxed mb-6 max-w-xs">
@@ -77,7 +77,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Mail className="w-4 h-4 text-primary" />
-                <span>hello@africanext.org</span>
+                <span>hello@africarenew.org</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Phone className="w-4 h-4 text-primary" />
@@ -159,7 +159,7 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             {/* Copyright */}
             <p className="text-sm text-muted-foreground text-center md:text-left">
-              &copy; {new Date().getFullYear()} AfricaNext Initiative. All rights reserved.
+              &copy; {new Date().getFullYear()} AfricaRenew Initiative. All rights reserved.
             </p>
 
             {/* Social Links */}
