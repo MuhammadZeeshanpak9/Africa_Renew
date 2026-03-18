@@ -119,6 +119,7 @@ type BuildingData = {
   newHeight: number;
   oldType: 'factory' | 'classic' | 'block';
   newType: 'glass-tower' | 'cylinder' | 'tiered';
+  roofDir: 'left' | 'right';
 };
 
 const generateCityMap = () => {
@@ -143,7 +144,8 @@ const generateCityMap = () => {
         oldHeight: 2 + rng() * 6 + (isCenter ? 4 : 0),
         newHeight: 8 + rng() * 15 + (isCenter ? 25 : 0),
         oldType: rng() > 0.6 ? 'factory' : (rng() > 0.3 ? 'classic' : 'block'),
-        newType: rng() > 0.7 ? 'cylinder' : (rng() > 0.4 ? 'tiered' : 'glass-tower')
+        newType: rng() > 0.7 ? 'cylinder' : (rng() > 0.4 ? 'tiered' : 'glass-tower'),
+        roofDir: rng() > 0.5 ? 'left' : 'right'
       });
     }
   }
@@ -153,6 +155,30 @@ const generateCityMap = () => {
 const CITY_DATA = generateCityMap();
 
 // ── COMPOSITE ARCHITECTURAL MODULES ──
+
+const RightTriangleRoof = ({ w, d, dir, y }: { w: number, d: number, dir: 'left' | 'right', y: number }) => {
+  const shape = React.useMemo(() => {
+    const s = new THREE.Shape();
+    if (dir === 'left') {
+      s.moveTo(-w/2, 0); 
+      s.lineTo(w/2, 0);
+      s.lineTo(-w/2, w); // Isosceles right triangle
+      s.lineTo(-w/2, 0);
+    } else {
+      s.moveTo(-w/2, 0);
+      s.lineTo(w/2, 0);
+      s.lineTo(w/2, w); // Peak right
+      s.lineTo(-w/2, 0);
+    }
+    return s;
+  }, [w, dir]);
+
+  return (
+    <mesh material={newScannableMaterial} position={[0, y, -d/2]} castShadow>
+      <extrudeGeometry args={[shape, { depth: d, bevelEnabled: false }]} />
+    </mesh>
+  );
+};
 
 const OldBuilding = ({ data }: { data: BuildingData }) => {
   return (
@@ -237,17 +263,17 @@ const NewBuilding = ({ data, progressValue }: { data: BuildingData, progressValu
         </>
       ) : (
         <>
-          {/* Sleek Modern Monolith */}
-          <mesh material={newScannableMaterial} position={[0, data.newHeight / 2, 0]} castShadow receiveShadow>
-            <boxGeometry args={[data.w * 0.85, data.newHeight, data.d * 0.85]} />
+          {/* Sleek Modern Monolith Base */}
+          <mesh material={newScannableMaterial} position={[0, (data.newHeight - data.w * 0.85) / 2, 0]} castShadow receiveShadow>
+            <boxGeometry args={[data.w * 0.85, data.newHeight - data.w * 0.85, data.d * 0.85]} />
           </mesh>
-          {/* Diagonal architectural cut top */}
-          <mesh material={newScannableMaterial} position={[0, data.newHeight, 0]} rotation={[0.2, 0, 0]}>
-            <boxGeometry args={[data.w * 0.85, 2, data.d * 0.85]} />
-          </mesh>
+          
+          {/* Isosceles Right/Left Triangle Roof */}
+          <RightTriangleRoof w={data.w * 0.85} d={data.d * 0.85} dir={data.roofDir} y={data.newHeight - data.w * 0.85} />
+          
           {/* Vertical mullions */}
-          <mesh material={newScannableSolidMaterial} position={[0, data.newHeight / 2, data.d * 0.44]}>
-             <boxGeometry args={[0.1, data.newHeight, 0.1]} />
+          <mesh material={newScannableSolidMaterial} position={[0, (data.newHeight - data.w * 0.85) / 2, data.d * 0.44]}>
+             <boxGeometry args={[0.1, data.newHeight - data.w * 0.85, 0.1]} />
           </mesh>
         </>
       )}
