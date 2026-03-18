@@ -1,15 +1,13 @@
 import { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Play, Pause } from 'lucide-react';
+import { Play } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function TransformationVideo() {
   const sectionRef = useRef<HTMLElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const playButtonRef = useRef<HTMLButtonElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
 
@@ -17,9 +15,8 @@ export default function TransformationVideo() {
     const section = sectionRef.current;
     const videoContainer = videoContainerRef.current;
     const title = titleRef.current;
-    const playButton = playButtonRef.current;
 
-    if (!section || !videoContainer || !title || !playButton) return;
+    if (!section || !videoContainer || !title) return;
 
     const ctx = gsap.context(() => {
       // Create scroll timeline
@@ -65,48 +62,10 @@ export default function TransformationVideo() {
         }
       );
 
-      // Play button entrance
-      gsap.fromTo(
-        playButton,
-        { opacity: 0, scale: 0.5 },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.8,
-          delay: 0.3,
-          ease: 'back.out(1.7)',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 60%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
-
-      // Continuous rotation for play button ripple
-      gsap.to(playButton.querySelector('.ripple-ring'), {
-        rotation: 360,
-        duration: 10,
-        repeat: -1,
-        ease: 'none',
-      });
-
     }, section);
 
     return () => ctx.revert();
   }, []);
-
-  const togglePlay = () => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (isPlaying) {
-      video.pause();
-    } else {
-      video.play();
-    }
-    setIsPlaying(!isPlaying);
-  };
 
   return (
     <section
@@ -129,62 +88,45 @@ export default function TransformationVideo() {
       {/* Video Container */}
       <div
         ref={videoContainerRef}
-        className="relative z-10 w-[90%] max-w-5xl aspect-video rounded-3xl overflow-hidden shadow-2xl will-change-transform"
+        className="relative z-10 w-[90%] max-w-5xl aspect-video rounded-3xl overflow-hidden shadow-2xl shadow-primary/20 will-change-transform"
       >
-        {/* Video */}
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&h=675&fit=crop"
-        >
-          <source
-            src="https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-traffic-at-night-11-large.mp4"
-            type="video/mp4"
-          />
-        </video>
+        {/* YouTube Video iframe */}
+        <iframe
+          src="https://www.youtube.com/embed/ME2-2b6YkDg?autoplay=1&mute=1&loop=1&playlist=ME2-2b6YkDg&controls=0&rel=0&modestbranding=1&iv_load_policy=3&showinfo=0"
+          title="Building Tomorrow's Africa"
+          className="w-full h-full object-cover pointer-events-none"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+        ></iframe>
 
         {/* Overlay Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
 
-        {/* Play/Pause Button */}
-        <button
-          ref={playButtonRef}
-          onClick={togglePlay}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group transition-all duration-300 hover:scale-110 hover:bg-white/30"
-          aria-label={isPlaying ? 'Pause video' : 'Play video'}
-        >
-          {/* Ripple Rings */}
-          <div className="ripple-ring absolute inset-0 rounded-full border-2 border-white/30" />
-          <div className="ripple-ring absolute inset-[-10px] rounded-full border border-white/20" />
-          <div className="ripple-ring absolute inset-[-20px] rounded-full border border-white/10" />
-
-          {/* Icon */}
-          <div className="relative z-10">
-            {isPlaying ? (
-              <Pause className="w-8 h-8 text-white" />
-            ) : (
-              <Play className="w-8 h-8 text-white ml-1" />
-            )}
+        {/* Center Text (Overlaying the video since it's background-like) */}
+        {!isPlaying && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-20">
+             <button
+              onClick={() => setIsPlaying(true)}
+              className="w-24 h-24 rounded-full bg-primary/80 flex items-center justify-center text-white hover:scale-110 transition-transform shadow-glow"
+            >
+              <Play className="w-10 h-10 ml-1 fill-current" />
+            </button>
           </div>
-        </button>
+        )}
 
         {/* Bottom Info Bar */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
+        <div className="absolute bottom-0 left-0 right-0 p-8 flex items-end justify-between z-20">
           <div>
-            <p className="text-white/80 text-sm uppercase tracking-wider mb-1">
-              Featured Story
+            <p className="text-primary font-medium uppercase tracking-[0.2em] text-xs mb-2">
+              The Vision
             </p>
-            <h3 className="text-white text-xl font-semibold">
-              Building Tomorrow&apos;s Africa
+            <h3 className="text-white text-2xl font-bold tracking-tight">
+              African Renew: The Genesis
             </h3>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <span className="text-white/80 text-sm">Live</span>
+          <div className="flex items-center gap-3 bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_10px_rgba(159,129,185,1)]" />
+            <span className="text-white/90 text-sm font-medium tracking-wide">Transforming</span>
           </div>
         </div>
       </div>

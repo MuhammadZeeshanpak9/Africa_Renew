@@ -101,24 +101,24 @@ export const MISSION_CARDS = [
 export const LEADERSHIP_TEAM = [
   {
     id: 1,
-    name: 'Dr. Amina Johnson',
+    name: 'Lucah TGD',
     role: 'Executive Director',
     bio: 'Visionary leader with 20+ years in continental development.',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop',
+    image: '/assets/Leader ship/LUCAH TGD.jpg',
   },
   {
     id: 2,
-    name: 'James Ochieng',
+    name: 'Rena Champ',
     role: 'Chief Strategist',
     bio: 'Expert in infrastructure planning and policy implementation.',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+    image: '/assets/Leader ship/Rena Champ.jpg',
   },
   {
     id: 3,
-    name: 'Sarah Mensah',
+    name: 'TGD',
     role: 'Operations Lead',
     bio: 'Driving operational excellence across 54 nations.',
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop',
+    image: '/assets/Leader ship/TGD.png',
   },
 ];
 
