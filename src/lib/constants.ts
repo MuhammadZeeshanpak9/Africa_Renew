@@ -213,7 +213,7 @@ export const GALLERY_ITEMS = [
     id: 1,
     category: 'Cities',
     title: 'Smart Urban Development',
-    image: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&h=600&fit=crop',
+    image: '/assets/Smart Urban Dev.png',
   },
   {
     id: 2,
@@ -231,13 +231,13 @@ export const GALLERY_ITEMS = [
     id: 4,
     category: 'Infrastructure',
     title: 'Modern Transportation',
-    image: 'https://images.unsplash.com/photo-1518005068251-37900150dfca?w=800&h=600&fit=crop',
+    image: '/assets/Transportation.png',
   },
   {
     id: 5,
     category: 'Cities',
     title: 'Sustainable Architecture',
-    image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop',
+    image: '/assets/Sustanable Archi.png',
   },
   {
     id: 6,
