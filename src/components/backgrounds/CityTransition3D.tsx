@@ -126,15 +126,15 @@ const generateCityMap = () => {
   const b: BuildingData[] = [];
   let seed = 9182;
   const rng = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
-  
+
   // Create a grid with some noise
   for (let x = -40; x <= 40; x += 6) {
     for (let z = -20; z >= -60; z -= 8) {
       if (rng() > 0.8) continue; // Leaves natural gaps/streets
-      
-      const dist = Math.sqrt(x*x + z*z);
+
+      const dist = Math.sqrt(x * x + z * z);
       const isCenter = dist < 25;
-      
+
       b.push({
         id: b.length,
         x: x + (rng() * 2 - 1),
@@ -160,21 +160,21 @@ const RightTriangleRoof = ({ w, d, dir, y }: { w: number, d: number, dir: 'left'
   const shape = React.useMemo(() => {
     const s = new THREE.Shape();
     if (dir === 'left') {
-      s.moveTo(-w/2, 0); 
-      s.lineTo(w/2, 0);
-      s.lineTo(-w/2, w); // Isosceles right triangle
-      s.lineTo(-w/2, 0);
+      s.moveTo(-w / 2, 0);
+      s.lineTo(w / 2, 0);
+      s.lineTo(-w / 2, w); // Isosceles right triangle
+      s.lineTo(-w / 2, 0);
     } else {
-      s.moveTo(-w/2, 0);
-      s.lineTo(w/2, 0);
-      s.lineTo(w/2, w); // Peak right
-      s.lineTo(-w/2, 0);
+      s.moveTo(-w / 2, 0);
+      s.lineTo(w / 2, 0);
+      s.lineTo(w / 2, w); // Peak right
+      s.lineTo(-w / 2, 0);
     }
     return s;
   }, [w, dir]);
 
   return (
-    <mesh material={newScannableMaterial} position={[0, y, -d/2]} castShadow>
+    <mesh material={newScannableMaterial} position={[0, y, -d / 2]} castShadow>
       <extrudeGeometry args={[shape, { depth: d, bevelEnabled: false }]} />
     </mesh>
   );
@@ -187,7 +187,7 @@ const OldBuilding = ({ data }: { data: BuildingData }) => {
       <mesh material={oldScannableMaterial} position={[0, data.oldHeight / 2, 0]} castShadow receiveShadow>
         <boxGeometry args={[data.w, data.oldHeight, data.d]} />
       </mesh>
-      
+
       {/* Architectural details per type */}
       {data.oldType === 'classic' && (
         <>
@@ -201,11 +201,11 @@ const OldBuilding = ({ data }: { data: BuildingData }) => {
           </mesh>
         </>
       )}
-      
+
       {data.oldType === 'factory' && (
         <>
           {/* Pitched Roof illusion */}
-          <mesh material={oldScannableDarkMaterial} position={[0, data.oldHeight + 0.5, 0]} rotation={[Math.PI/2, Math.PI/2, 0]} castShadow>
+          <mesh material={oldScannableDarkMaterial} position={[0, data.oldHeight + 0.5, 0]} rotation={[Math.PI / 2, Math.PI / 2, 0]} castShadow>
             <cylinderGeometry args={[data.w / 2, data.w / 2, data.d, 3]} />
           </mesh>
           {/* Chimney */}
@@ -242,9 +242,9 @@ const NewBuilding = ({ data, progressValue }: { data: BuildingData, progressValu
           </mesh>
           {/* Structural Steel Rings */}
           {[...Array(Math.floor(data.newHeight / 5))].map((_, i) => (
-             <mesh key={i} material={newScannableSolidMaterial} position={[0, (i + 1) * 5, 0]}>
-               <cylinderGeometry args={[data.w / 2.15, data.w / 2.15, 0.2, 32]} />
-             </mesh>
+            <mesh key={i} material={newScannableSolidMaterial} position={[0, (i + 1) * 5, 0]}>
+              <cylinderGeometry args={[data.w / 2.15, data.w / 2.15, 0.2, 32]} />
+            </mesh>
           ))}
         </>
       ) : isTiered ? (
@@ -257,7 +257,7 @@ const NewBuilding = ({ data, progressValue }: { data: BuildingData, progressValu
             <boxGeometry args={[data.w * 0.7, data.newHeight * 0.5, data.d * 0.7]} />
           </mesh>
           {/* Solid Core/Edge Pillars */}
-          <mesh material={newScannableSolidMaterial} position={[data.w/2, data.newHeight/2, data.d/2]}>
+          <mesh material={newScannableSolidMaterial} position={[data.w / 2, data.newHeight / 2, data.d / 2]}>
             <boxGeometry args={[0.3, data.newHeight, 0.3]} />
           </mesh>
         </>
@@ -267,13 +267,13 @@ const NewBuilding = ({ data, progressValue }: { data: BuildingData, progressValu
           <mesh material={newScannableMaterial} position={[0, (data.newHeight - data.w * 0.85) / 2, 0]} castShadow receiveShadow>
             <boxGeometry args={[data.w * 0.85, data.newHeight - data.w * 0.85, data.d * 0.85]} />
           </mesh>
-          
+
           {/* Isosceles Right/Left Triangle Roof */}
           <RightTriangleRoof w={data.w * 0.85} d={data.d * 0.85} dir={data.roofDir} y={data.newHeight - data.w * 0.85} />
-          
+
           {/* Vertical mullions */}
           <mesh material={newScannableSolidMaterial} position={[0, (data.newHeight - data.w * 0.85) / 2, data.d * 0.44]}>
-             <boxGeometry args={[0.1, data.newHeight - data.w * 0.85, 0.1]} />
+            <boxGeometry args={[0.1, data.newHeight - data.w * 0.85, 0.1]} />
           </mesh>
         </>
       )}
@@ -294,12 +294,12 @@ const CityScene = ({ progressValue }: SceneProps) => {
   // Animate uniforms and camera based on scroll
   useFrame((state) => {
     const p = progressValue.current;
-    
+
     // 1. City Base Ascension: Stay buried until past Transformation Video
     const riseStart = 0.25;
     const riseEnd = 0.4;
     let globalY = 0;
-    
+
     if (p < riseStart) {
       globalY = -80; // Keep completely hidden deep underground
     } else if (p <= riseEnd) {
@@ -311,13 +311,13 @@ const CityScene = ({ progressValue }: SceneProps) => {
     if (groupRef.current) {
       groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, globalY, 0.1);
     }
-    
+
     // 2. Scanline Reconstruction Logic: Starts only after city has fully emerged
     const scanStart = 0.45;
     let scanY = 0;
     if (p >= scanStart) {
       const scanProgress = (p - scanStart) / (1.0 - scanStart); // normalize 0-1
-      scanY = scanProgress * 60; 
+      scanY = scanProgress * 60;
     }
 
     // Update global shader uniforms
@@ -356,21 +356,21 @@ const CityScene = ({ progressValue }: SceneProps) => {
     <>
       {/* ── HIGH FIDELITY GLOBAL ILLUMINATION (White BG strictly) ── */}
       <color attach="background" args={['#ffffff']} />
-      
+
       {/* Very soft atmospheric depth (white haze) */}
       <fog attach="fog" args={['#ffffff', 30, 90]} />
-      
+
       {/* Soft daylight rig */}
       <ambientLight intensity={0.6} color="#ffffff" />
-      <directionalLight 
-        position={[20, 50, -20]} 
-        intensity={2.5} 
-        color="#fff5eb" 
-        castShadow 
+      <directionalLight
+        position={[20, 50, -20]}
+        intensity={2.5}
+        color="#fff5eb"
+        castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
       />
-      
+
       {/* Soft bounce light from ground (skylight emulation) */}
       <directionalLight position={[-10, 10, 20]} intensity={1.0} color="#e0f0ff" />
 
@@ -379,23 +379,23 @@ const CityScene = ({ progressValue }: SceneProps) => {
 
       {/* ── SCENE GEOMETRY ── */}
       <group ref={groupRef}>
-        
+
         {/* Soft, premium solid ground plane */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
           <planeGeometry args={[200, 200]} />
           <meshStandardMaterial color="#f8f9fa" roughness={0.8} metalness={0.1} />
         </mesh>
-        
+
         {/* Contact shadows for grounded realism without pure black */}
         <ContactShadows position={[0, 0.01, 0]} opacity={0.4} scale={100} blur={2} far={10} color="#4a5568" />
 
         {/* Instantiating Old and New modular geometry sets. 
             They sit on top of each other, but the custom shaders clip them seamlessly! */}
         {CITY_DATA.map((b) => (
-           <React.Fragment key={b.id}>
-             <OldBuilding data={b} />
-             <NewBuilding data={b} progressValue={progressValue} />
-           </React.Fragment>
+          <React.Fragment key={b.id}>
+            <OldBuilding data={b} />
+            <NewBuilding data={b} progressValue={progressValue} />
+          </React.Fragment>
         ))}
 
       </group>
@@ -410,7 +410,7 @@ export default function CityTransition3D() {
     damping: 20,
     restDelta: 0.001
   });
-  
+
   const progressValueRef = useRef(0);
   useEffect(() => smoothProgress.onChange((v) => { progressValueRef.current = v; }), [smoothProgress]);
 
