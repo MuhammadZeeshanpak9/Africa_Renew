@@ -101,7 +101,7 @@ export const MISSION_CARDS = [
 export const LEADERSHIP_TEAM = [
   {
     id: 1,
-    name: 'Lucah TGD',
+    name: 'TGD',
     role: 'Executive Director',
     bio: 'Visionary leader with 20+ years in continental development.',
     image: '/assets/Leader ship/LUCAH TGD.jpg',
@@ -115,7 +115,7 @@ export const LEADERSHIP_TEAM = [
   },
   {
     id: 3,
-    name: 'TGD',
+    name: 'Lucah TGD',
     role: 'Operations Lead',
     bio: 'Driving operational excellence across 54 nations.',
     image: '/assets/Leader ship/TGD.png',

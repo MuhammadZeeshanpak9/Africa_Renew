@@ -33,7 +33,7 @@ function ArchitectureCard({ card, index }: { card: any; index: number }) {
   return (
     <div
       ref={cardRef}
-      className="h-full p-8 rounded-3xl glass-card hover:shadow-glow transition-all duration-500 group relative"
+      className="h-full p-8 rounded-lg glass-card hover:shadow-glow transition-all duration-500 group relative"
     >
       <div className="w-16 h-16 mb-6 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 text-primary">
         <Icon className="w-8 h-8" />
@@ -209,7 +209,7 @@ export default function Architecture() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-20 p-8 rounded-3xl glass-card"
+          className="mt-20 p-8 rounded-lg glass-card"
         >
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-center md:text-left">

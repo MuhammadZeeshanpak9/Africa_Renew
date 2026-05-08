@@ -34,7 +34,7 @@ function LeadershipCard({ leader, index, expandedCard, toggleCard }: {
       className="leadership-card perspective-1000"
     >
       <div
-        className={`relative overflow-hidden rounded-3xl glass-card transition-all duration-500 ${
+        className={`relative overflow-hidden rounded-lg glass-card transition-all duration-500 ${
           expandedCard === leader.id ? 'shadow-glow' : 'hover:shadow-glass'
         }`}
       >

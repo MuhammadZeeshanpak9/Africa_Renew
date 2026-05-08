@@ -36,7 +36,7 @@ function MissionCard({ card, index }: { card: any; index: number }) {
       ref={cardRef}
       className="relative group h-full"
     >
-      <div className="relative h-full p-8 rounded-3xl glass-card overflow-hidden transition-all duration-500 group-hover:shadow-glow">
+      <div className="relative h-full p-8 rounded-lg glass-card overflow-hidden transition-all duration-500 group-hover:shadow-glow">
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
           style={{

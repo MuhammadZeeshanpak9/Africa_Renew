@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import africaRenewLogo from '../../assets/Africa Renew logo.jpg';
 import { 
   Twitter, 
   Linkedin, 
@@ -50,15 +51,15 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative w-full bg-white border-t border-primary/10">
+    <footer className="relative w-full bg-white border-t border-primary/10 lg:pl-20">
       {/* Main Footer */}
       <div className="section-container py-16 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12">
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <a href="#hero" className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                <span className="text-white font-bold text-xl">A</span>
+              <div className="w-12 h-12 rounded-lg overflow-hidden">
+                <img src={africaRenewLogo} alt="Africa Renew" className="w-full h-full object-cover" />
               </div>
               <span className="font-semibold text-xl">
                 Africa<span className="text-primary">Renew</span>

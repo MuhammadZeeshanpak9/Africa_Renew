@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
+import africaRenewLogo from '../../assets/Africa Renew logo.jpg';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -60,8 +61,8 @@ export default function Navbar() {
             onClick={(e) => { e.preventDefault(); scrollToSection('#hero'); }}
             className="flex flex-col items-center group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20 rotate-3 group-hover:rotate-0 transition-transform duration-500">
-              <span className="text-white font-bold text-xl drop-shadow-sm">A</span>
+            <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-lg shadow-primary/20 rotate-3 group-hover:rotate-0 transition-transform duration-500">
+              <img src={africaRenewLogo} alt="Africa Renew" className="w-full h-full object-cover" />
             </div>
           </a>
         </div>
@@ -119,8 +120,8 @@ export default function Navbar() {
 
       {/* MOBILE TOP BAR */}
       <nav className="fixed top-0 left-0 right-0 z-50 lg:hidden p-4 flex items-center justify-between pointer-events-none">
-        <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center pointer-events-auto shadow-lg shadow-primary/20">
-          <span className="text-white font-bold">A</span>
+        <div className="w-10 h-10 rounded-xl overflow-hidden pointer-events-auto shadow-lg shadow-primary/20">
+          <img src={africaRenewLogo} alt="Africa Renew" className="w-full h-full object-cover" />
         </div>
         
         <button

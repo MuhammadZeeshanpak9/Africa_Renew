@@ -279,7 +279,7 @@ export default function TransparencyHub() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="h-full p-6 rounded-3xl glass-card"
+              className="h-full p-6 rounded-lg glass-card"
             >
               <h3 className="text-lg font-semibold mb-6 text-center">Key Performance</h3>
               <div className="grid grid-cols-2 gap-6">
@@ -297,7 +297,7 @@ export default function TransparencyHub() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="mt-8 p-6 rounded-3xl glass-card"
+          className="mt-8 p-6 rounded-lg glass-card"
         >
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">Live Activity</h3>

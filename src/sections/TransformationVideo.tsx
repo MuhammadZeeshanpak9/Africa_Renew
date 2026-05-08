@@ -88,7 +88,7 @@ export default function TransformationVideo() {
       {/* Video Container */}
       <div
         ref={videoContainerRef}
-        className="relative z-10 w-[90%] max-w-5xl aspect-video rounded-3xl overflow-hidden shadow-2xl shadow-primary/20 will-change-transform"
+        className="relative z-10 w-[90%] max-w-5xl aspect-video rounded-lg overflow-hidden shadow-2xl shadow-primary/20 will-change-transform"
       >
         {/* YouTube Video iframe */}
         <iframe

@@ -186,7 +186,7 @@ export default function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="mt-16 p-8 rounded-3xl glass-card max-w-xl mx-auto"
+            className="mt-16 p-8 rounded-lg glass-card max-w-xl mx-auto"
           >
             <h3 className="text-lg font-semibold mb-2">Stay Updated</h3>
             <p className="text-sm text-muted-foreground mb-4">

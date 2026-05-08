@@ -31,7 +31,7 @@ function GalleryItem({ item }: { item: any }) {
       className="flex-shrink-0 w-[85vw] md:w-[500px] lg:w-[600px]"
       style={{ scrollSnapAlign: 'start' }}
     >
-      <div className="group relative h-[400px] md:h-[450px] rounded-3xl overflow-hidden shadow-xl">
+      <div className="group relative h-[400px] md:h-[450px] rounded-lg overflow-hidden shadow-xl">
         <img
           src={item.image}
           alt={item.title}

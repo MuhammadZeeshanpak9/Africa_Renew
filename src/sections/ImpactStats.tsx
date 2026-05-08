@@ -63,7 +63,7 @@ function StatCard({ value, prefix, suffix, label, description, icon: Icon, index
       whileHover={{ y: -10, scale: 1.02 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="h-full p-8 rounded-3xl glass-card hover:shadow-glow transition-all duration-500">
+      <div className="h-full p-8 rounded-lg glass-card hover:shadow-glow transition-all duration-500">
         <div className="w-14 h-14 mb-6 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 text-primary">
           <Icon className="w-7 h-7" />
         </div>
